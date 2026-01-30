@@ -1067,20 +1067,20 @@ def pre_configure_hook_graphviz(self, *args, **kwargs):
             env.setvar(var_name, usr_dir)
 
         old_configopts = self.cfg['configopts']
-        old_items = set(filter(None, old_configopts.split(' ')))
+        old_items = list(filter(None, old_configopts.split(' ')))
 
         # Replace --with-ltdl-lib and --with-zlibdir options defined in the EC to point to compat layer
         lib_dir = os.path.join(usr_dir, 'lib64')
-        new_items = set()
+        new_items = []
         # Add to the new_items all the old items except the `--with-ltdl-lib` and `--with-ltdl-lib` for 
         # which we fix the lib dir to lib64 instead of lib
         for item in old_items:
             if item.startswith('--with-ltdl-lib'):
-                new_items.add(f'--with-ltdl-lib={lib_dir}')
+                new_items.append(f'--with-ltdl-lib={lib_dir}')
             elif item.startswith('--with-zlibdir'):
-                new_items.add(f'--with-zlibdir={lib_dir}')
+                new_items.append(f'--with-zlibdir={lib_dir}')
             else:
-                new_items.add(item)
+                new_items.append(item)
 
         self.cfg['configopts'] = ' '.join(new_items)
     else:
